@@ -1,75 +1,84 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prediksi BUY / SELL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kalkulator Support & Resistance</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #0b1a2e; color: #fff; text-align: center; padding: 30px; }
-  input { padding: 10px; margin: 5px; font-size: 18px; width: 120px; text-align: center; border-radius: 6px; border: none; }
-  button { padding: 10px 20px; background: #1e90ff; color: white; font-size: 18px; border: none; border-radius: 6px; cursor: pointer; }
-  button:hover { background: #0077cc; }
-  .hasil { margin-top: 20px; font-size: 22px; font-weight: bold; }
+    body {
+        background: #0d0d0d;
+        color: #f5f5f5;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    .container {
+        max-width: 350px;
+        margin: auto;
+        background: #1a1a1a;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background: #333;
+        border: 1px solid #555;
+        color: #fff;
+        border-radius: 5px;
+    }
+    button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background: #b8860b;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .result {
+        margin-top: 20px;
+        padding: 10px;
+        background: #111;
+        border-radius: 6px;
+    }
 </style>
 </head>
 <body>
+<div class="container">
+    <h2>Kalkulator Support & Resistance</h2><label>High:</label>
+<input type="number" id="high" placeholder="Masukkan nilai tertinggi">
 
-<h2>🔮 Prediksi Arah Harga XAU/USD</h2>
-<p>Masukkan harga <b>ASK</b> dan <b>BID</b> dari aplikasi HSB kamu:</p>
+<label>Low:</label>
+<input type="number" id="low" placeholder="Masukkan nilai terendah">
 
-<label>ASK:</label>
-<input type="number" id="ask" step="0.01" placeholder="contoh: 2685.25"><br>
-<label>BID:</label>
-<input type="number" id="bid" step="0.01" placeholder="contoh: 2684.90"><br>
+<button onclick="hitung()">Hitung</button>
 
-<button onclick="prediksi()">Prediksi Sekarang</button>
+<div class="result" id="output"></div>
 
-<div class="hasil" id="hasil"></div>
+</div><script>
+function hitung() {
+    let high = parseFloat(document.getElementById("high").value);
+    let low = parseFloat(document.getElementById("low").value);
 
-<script>
-function prediksi() {
-  const ask = parseFloat(document.getElementById("ask").value);
-  const bid = parseFloat(document.getElementById("bid").value);
-  const hasil = document.getElementById("hasil");
+    if (isNaN(high) || isNaN(low)) {
+        document.getElementById("output").innerHTML = "Masukkan angka yang valid";
+        return;
+    }
 
-  if (isNaN(ask) || isNaN(bid)) {
-    hasil.textContent = "⚠️ Masukkan angka ASK dan BID yang valid.";
-    return;
-  }
+    let support = low + (high - low) * 0.25;
+    let tengah = low + (high - low) * 0.5;
+    let resistance = low + (high - low) * 0.75;
 
-  const spread = (ask - bid).toFixed(2);
-  const arah = ask > bid ? "Naik" : "Turun";
-
-  // Logika dasar prediksi
-  let prediksi;
-  let waktu;
-  let saran;
-
-  if (arah === "Naik" && spread < 0.20) {
-    prediksi = "BUY ✅";
-    waktu = "Tutup posisi dalam 30–60 menit";
-    saran = "Gunakan Take Profit di +20 pips, Stop Loss di -10 pips.";
-  } 
-  else if (arah === "Turun" && spread < 0.20) {
-    prediksi = "SELL 🔻";
-    waktu = "Tutup posisi dalam 30–60 menit";
-    saran = "Gunakan Take Profit di +20 pips, Stop Loss di -10 pips.";
-  } 
-  else {
-    prediksi = "TUNGGU ⚠️";
-    waktu = "Belum ada arah jelas.";
-    saran = "Amati dulu pergerakan 2–3 candle berikutnya.";
-  }
-
-  hasil.innerHTML = `
-    <p>📊 Spread: ${spread}</p>
-    <p>📈 Arah harga: ${arah}</p>
-    <p>🎯 Prediksi: <span style="color:yellow">${prediksi}</span></p>
-    <p>⏱️ ${waktu}</p>
-    <p>💡 ${saran}</p>
-  `;
+    document.getElementById("output").innerHTML = `
+        <b>Support:</b> ${support.toFixed(2)}<br>
+        <b>Zona Buy:</b> di bawah ${support.toFixed(2)}<br><br>
+        <b>Zona Tengah (No Entry):</b> sekitar ${tengah.toFixed(2)}<br><br>
+        <b>Zona Sell:</b> di atas ${resistance.toFixed(2)}<br>
+        <b>Resistance:</b> ${resistance.toFixed(2)}
+    `;
 }
-</script>
-
-</body>
+</script></body>
 </html>
